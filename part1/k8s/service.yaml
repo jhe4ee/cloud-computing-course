@@ -1,0 +1,29 @@
+# Backend Service (LoadBalancer, exposed via ELB)
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend-svc
+  namespace: default
+  annotations:
+    kubernetes.io/elb.class: union
+spec:
+  type: LoadBalancer
+  selector:
+    app: backend
+  ports:
+  - port: 80
+    targetPort: 5000
+---
+# Redis Service (ClusterIP, internal only)
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis-svc
+  namespace: default
+spec:
+  type: ClusterIP
+  selector:
+    app: redis
+  ports:
+  - port: 6379
+    targetPort: 6379
