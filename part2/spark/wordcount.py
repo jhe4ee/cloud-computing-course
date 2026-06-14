@@ -1,20 +1,24 @@
-import os
 from pyspark.sql import SparkSession
 
-ak = os.environ.get("OBS_AK", "")
-sk = os.environ.get("OBS_SK", "")
-endpoint = os.environ.get("OBS_ENDPOINT", "obs.cn-north-4.myhuaweicloud.com")
+spark = SparkSession.builder.appName("WordCount").getOrCreate()
 
-spark = SparkSession.builder \
-    .appName("WordCount") \
-    .config("spark.hadoop.fs.s3a.access.key", ak) \
-    .config("spark.hadoop.fs.s3a.secret.key", sk) \
-    .config("spark.hadoop.fs.s3a.endpoint", endpoint) \
-    .config("spark.hadoop.fs.s3a.impl", "org.apache.hadoop.fs.s3a.S3AFileSystem") \
-    .config("spark.hadoop.fs.s3a.path.style.access", "true") \
-    .getOrCreate()
-
-lines = spark.sparkContext.textFile("s3a://cloud-course-data-b62c/sample.txt")
+sample_text = [
+    "Spark is a fast and general engine for large scale data processing",
+    "Apache Spark provides high level APIs in Java Scala Python and R",
+    "Spark runs on Hadoop Mesos Kubernetes standalone or in the cloud",
+    "It can access diverse data sources such as HDFS S3 and HBase",
+    "Machine learning is supported through MLlib on Spark",
+    "Spark SQL enables querying structured data using SQL",
+    "Streaming data can be processed with Spark Streaming",
+    "Graph processing is available through GraphX on Spark",
+    "Cloud computing enables on demand resource provisioning",
+    "Kubernetes is a portable extensible open source platform",
+    "Spark on Kubernetes is the future of big data processing",
+    "Data engineers use Spark for ETL and data pipelines",
+    "Python is the most popular language for data science",
+    "Spark supports batch processing and real time streaming",
+]
+lines = spark.sparkContext.parallelize(sample_text)
 
 word_counts = (
     lines.flatMap(lambda line: line.split())
