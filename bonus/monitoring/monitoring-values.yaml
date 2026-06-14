@@ -1,76 +1,49 @@
 grafana:
-  enabled: true
-  adminPassword: "admin123456"
-  service:
-    type: ClusterIP
-  image:
-    registry: swr.cn-north-4.myhuaweicloud.com
-    repository: cloud-course-ks/grafana
-    tag: "12.4.3"
-  sidecar:
+    enabled: true
+    adminPassword: "admin123456"
+    sidecar:
+      enabled: false
     image:
       registry: swr.cn-north-4.myhuaweicloud.com
-      repository: cloud-course-ks/k8s-sidecar
-      tag: "2.6.0"
-
-prometheus:
-  enabled: true
-  service:
-    type: ClusterIP
-  prometheusSpec:
-    retention: 7d
-    image:
-      registry: swr.cn-north-4.myhuaweicloud.com
-      repository: cloud-course-ks/prometheus
-      tag: "v3.11.2"
-  thanosService:
-    enabled: false
-  thanosServiceExternal:
-    enabled: false
-
-alertmanager:
-  enabled: true
-  alertmanagerSpec:
-    image:
-      registry: swr.cn-north-4.myhuaweicloud.com
-      repository: cloud-course-ks/alertmanager
-      tag: "v0.32.0"
-
-prometheusOperator:
-  image:
-    registry: swr.cn-north-4.myhuaweicloud.com
-    repository: cloud-course-ks/prometheus-operator
-    tag: "v0.90.1"
-  prometheusDefaultBaseImage: cloud-course-ks/prometheus
-  prometheusDefaultBaseImageRegistry: swr.cn-north-4.myhuaweicloud.com
-  admissionWebhooks:
-    patch:
+      repository: cloud-course-ks/grafana
+      tag: "12.4.3"
+  prometheus:
+    enabled: true
+    prometheusSpec:
+      retention: 7d
       image:
         registry: swr.cn-north-4.myhuaweicloud.com
-        repository: cloud-course-ks/kube-webhook-certgen
-        tag: "1.8.1"
-  prometheusConfigReloader:
+        repository: cloud-course-ks/prometheus
+        tag: "v3.11.2"
+  alertmanager:
+    enabled: true
+    alertmanagerSpec:
+      image:
+        registry: swr.cn-north-4.myhuaweicloud.com
+        repository: cloud-course-ks/alertmanager
+        tag: "v0.32.0"
+  prometheusOperator:
     image:
       registry: swr.cn-north-4.myhuaweicloud.com
-      repository: cloud-course-ks/prometheus-config-reloader
+      repository: cloud-course-ks/prometheus-operator
       tag: "v0.90.1"
-
-kubeStateMetrics:
-  enabled: false
-
-kube-state-metrics:
-  image:
-    registry: swr.cn-north-4.myhuaweicloud.com
-    repository: cloud-course-ks/kube-state-metrics
-    tag: "v2.18.0"
-  imagePullSecrets: []
-
-prometheus-node-exporter:
-  image:
-    registry: swr.cn-north-4.myhuaweicloud.com
-    repository: cloud-course-ks/node-exporter
-    tag: "v1.11.1"
-
-global:
-  imagePullSecrets:
+    prometheusDefaultBaseImage: cloud-course-ks/prometheus
+    prometheusDefaultBaseImageRegistry: swr.cn-north-4.myhuaweicloud.com
+    admissionWebhooks:
+      enabled: false
+    prometheusConfigReloader:
+      image:
+        registry: swr.cn-north-4.myhuaweicloud.com
+        repository: cloud-course-ks/prometheus-config-reloader
+        tag: "v0.90.1"
+  kubeStateMetrics:
+    enabled: false
+  prometheus-node-exporter:
+    enabled: true
+    image:
+      registry: swr.cn-north-4.myhuaweicloud.com
+      repository: cloud-course-ks/node-exporter
+      tag: "v1.11.1"
+  global:
+    imagePullSecrets:
     - name: swr-secret
