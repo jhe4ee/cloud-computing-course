@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.6.13)  14 JUN 2026 22:22
+This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.6.13)  14 JUN 2026 22:33
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1158,40 +1158,37 @@ Missing character: There is no ✓ (U+2713) in font Times New Roman/OT:script=la
 n;language=dflt;mapping=tex-text;!
 File: pic/bonus2-actions-details.png Graphic file (type bmp)
 <pic/bonus2-actions-details.png>
-[17] [18]
-Overfull \hbox (60.90161pt too wide) in paragraph at lines 534--535
-[]|\TU/SimSun(0)/b/n/12 （以 上 为 专 题 分 析 文 字，|  满 足 $\OMS/cmsy/m/n/12 ^^U$ \TU/Ti
-mesNewRoman(0)/b/n/12 1500 \TU/SimSun(0)/b/n/12 字 要 求。|  代 码 文 件 路 径：| \TU/Time
-sNewRoman(0)/b/n/12 bonus/advanced/k3s_mqtt_sensor.py\TU/SimSun(0)/b/n/12 ）|
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 534--535
-
- []
-
-[19]
-Overfull \hbox (0.51393pt too wide) in paragraph at lines 551--552
+[17] [18] [19]
+Missing character: There is no ① (U+2460) in font Times New Roman/OT:script=lat
+n;language=dflt;mapping=tex-text;!
+Missing character: There is no ② (U+2461) in font Times New Roman/OT:script=lat
+n;language=dflt;mapping=tex-text;!
+Missing character: There is no ③ (U+2462) in font Times New Roman/OT:script=lat
+n;language=dflt;mapping=tex-text;!
+Missing character: There is no ④ (U+2463) in font Times New Roman/OT:script=lat
+n;language=dflt;mapping=tex-text;!
+[20]
+Overfull \hbox (0.51393pt too wide) in paragraph at lines 567--568
 []\TU/CourierNew(0)/m/n/12 part1/k8s/  |\TU/SimSun(0)/m/n/12 — —|  所 有 \TU/Time
 sNewRoman(0)/m/n/12 K8s YAML |\TU/SimSun(0)/m/n/12 （\TU/TimesNewRoman(0)/m/n/12
  Deployment×3, Service, ConfigMap, Secret, PVC,
  []
 
-[20] [21] (./实验报告.aux)
+[21] [22] (./实验报告.aux)
  ***********
 LaTeX2e <2026-06-01>
 L3 programming layer <2022/08/05>
  ***********
 Package rerunfilecheck Info: File `实验报告.out' has not changed.
-(rerunfilecheck)             Checksum: 0DEC07C627DD379131A3EF1727934AEC;4191.
+(rerunfilecheck)             Checksum: 9580E5701C8849F834BF727AEF491129;4743.
  ) 
 Here is how much of TeX's memory you used:
- 19277 strings out of 467813
- 440191 string characters out of 5427155
- 909082 words of memory out of 5000000
- 48035 multiletter control sequences out of 15000+600000
+ 19298 strings out of 467813
+ 441482 string characters out of 5427155
+ 909652 words of memory out of 5000000
+ 48056 multiletter control sequences out of 15000+600000
  633972 words of font info for 130 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
  93i,7n,111p,552b,1818s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on 实验报告.pdf (22 pages).
+Output written on 实验报告.pdf (23 pages).
