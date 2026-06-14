@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.6.13)  14 JUN 2026 21:03
+This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.6.13)  14 JUN 2026 22:14
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1100,76 +1100,94 @@ File: pic/task6-stable-1pod.png Graphic file (type bmp)
  [7]
 File: pic/a0-wordcount-completed.png Graphic file (type bmp)
 <pic/a0-wordcount-completed.png>
+File: pic/a0-wordcount-top10.png Graphic file (type bmp)
+<pic/a0-wordcount-top10.png>
+ [8]
 File: pic/a1-schema.png Graphic file (type bmp)
 <pic/a1-schema.png>
 File: pic/a1-missing-values.png Graphic file (type bmp)
 <pic/a1-missing-values.png>
- [8]
 File: pic/a1-dropna-result.png Graphic file (type bmp)
 <pic/a1-dropna-result.png>
- [9]
+ [9] [10]
 File: pic/a2-query1-2.png Graphic file (type bmp)
 <pic/a2-query1-2.png>
 File: pic/a2-query3.png Graphic file (type bmp)
 <pic/a2-query3.png>
- [10]
 File: pic/a2-query4.png Graphic file (type bmp)
 <pic/a2-query4.png>
  [11]
-[12]
+[12] [13]
 File: pic/a3-perf-completed.png Graphic file (type bmp)
 <pic/a3-perf-completed.png>
 File: pic/a3-perf-times.png Graphic file (type bmp)
 <pic/a3-perf-times.png>
- [13]
-Overfull \hbox (20.07422pt too wide) in paragraph at lines 394--396
+
+Overfull \hbox (20.07422pt too wide) in paragraph at lines 406--408
 []\TU/SimSun(0)/b/n/12 部 署 架 构：|  \TU/SimSun(0)/m/n/12 使 用 \TU/TimesNewRoman(0)
 /m/n/12 Helm Chart kube-prometheus-stack \TU/SimSun(0)/m/n/12 在 \TU/TimesNewRom
 an(0)/m/n/12 monitoring \TU/SimSun(0)/m/n/12 命 名 空 间 部 署 \TU/TimesNewRoman(0)/m
 /n/12 Prometheus
  []
 
+[14]
 File: pic/bonus1-pods-running.png Graphic file (type bmp)
 <pic/bonus1-pods-running.png>
 File: pic/bonus1-grafana-health-check.png Graphic file (type bmp)
 <pic/bonus1-grafana-health-check.png>
-[14]
+File: pic/bonus1-cpu-dashboard.png Graphic file (type bmp)
+<pic/bonus1-cpu-dashboard.png>
+File: pic/bonus1-memory-dashboard.png Graphic file (type bmp)
+<pic/bonus1-memory-dashboard.png>
+ [15] [16]
+Missing character: There is no ① (U+2460) in font Times New Roman/OT:script=lat
+n;language=dflt;mapping=tex-text;!
+Missing character: There is no ② (U+2461) in font Times New Roman/OT:script=lat
+n;language=dflt;mapping=tex-text;!
+Missing character: There is no ③ (U+2462) in font Times New Roman/OT:script=lat
+n;language=dflt;mapping=tex-text;!
 File: pic/bonus2-actions-green.png Graphic file (type bmp)
 <pic/bonus2-actions-green.png>
-
 Missing character: There is no ✓ (U+2713) in font Times New Roman/OT:script=lat
 n;language=dflt;mapping=tex-text;!
 Missing character: There is no ✓ (U+2713) in font Times New Roman/OT:script=lat
 n;language=dflt;mapping=tex-text;!
 File: pic/bonus2-actions-details.png Graphic file (type bmp)
 <pic/bonus2-actions-details.png>
-[15] [16]
-Overfull \hbox (60.90161pt too wide) in paragraph at lines 493--494
+[17] [18]
+Overfull \hbox (60.90161pt too wide) in paragraph at lines 530--531
 []|\TU/SimSun(0)/b/n/12 （以 上 为 专 题 分 析 文 字，|  满 足 $\OMS/cmsy/m/n/12 ^^U$ \TU/Ti
 mesNewRoman(0)/b/n/12 1500 \TU/SimSun(0)/b/n/12 字 要 求。|  代 码 文 件 路 径：| \TU/Time
 sNewRoman(0)/b/n/12 bonus/advanced/k3s_mqtt_sensor.py\TU/SimSun(0)/b/n/12 ）|
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 493--494
+Underfull \hbox (badness 10000) in paragraph at lines 530--531
 
  []
 
-[17] [18] (./实验报告.aux)
+[19]
+Overfull \hbox (0.51393pt too wide) in paragraph at lines 547--548
+[]\TU/CourierNew(0)/m/n/12 part1/k8s/  |\TU/SimSun(0)/m/n/12 — —|  所 有 \TU/Time
+sNewRoman(0)/m/n/12 K8s YAML |\TU/SimSun(0)/m/n/12 （\TU/TimesNewRoman(0)/m/n/12
+ Deployment×3, Service, ConfigMap, Secret, PVC,
+ []
+
+[20] [21] (./实验报告.aux)
  ***********
 LaTeX2e <2026-06-01>
 L3 programming layer <2022/08/05>
  ***********
 Package rerunfilecheck Info: File `实验报告.out' has not changed.
-(rerunfilecheck)             Checksum: 55A023485EF61CE7D3CDFB96BDF91596;3678.
+(rerunfilecheck)             Checksum: 0DEC07C627DD379131A3EF1727934AEC;4191.
  ) 
 Here is how much of TeX's memory you used:
- 19188 strings out of 467813
- 436203 string characters out of 5427155
- 832513 words of memory out of 5000000
- 47950 multiletter control sequences out of 15000+600000
- 633964 words of font info for 129 fonts, out of 8000000 for 9000
+ 19243 strings out of 467813
+ 438102 string characters out of 5427155
+ 909082 words of memory out of 5000000
+ 48001 multiletter control sequences out of 15000+600000
+ 633972 words of font info for 130 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
- 93i,7n,111p,552b,517s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 93i,7n,111p,552b,1818s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on 实验报告.pdf (19 pages).
+Output written on 实验报告.pdf (22 pages).
