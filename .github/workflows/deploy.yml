@@ -1,11 +1,11 @@
 name: CI/CD Pipeline
-  on:
-    push:
-      branches: [main]
-  jobs:
-    build-and-deploy:
-      runs-on: ubuntu-latest
-      steps:
+on:
+  push:
+    branches: [main]
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
       - name: Checkout
         uses: actions/checkout@v4
 
@@ -19,13 +19,11 @@ name: CI/CD Pipeline
       - name: Build and Push Backend
         run: |
           cd part1/backend
-          docker build --provenance=false -t swr.cn-north-4.myhuaweicloud.com/cloud-course-ks/backend:${{ github.sha }}
-  .
+          docker build --provenance=false -t swr.cn-north-4.myhuaweicloud.com/cloud-course-ks/backend:${{ github.sha }} .
           docker push swr.cn-north-4.myhuaweicloud.com/cloud-course-ks/backend:${{ github.sha }}
 
       - name: Build and Push Frontend
         run: |
           cd part1/frontend
-          docker build --provenance=false -t swr.cn-north-4.myhuaweicloud.com/cloud-course-ks/frontend:${{ github.sha }}
-   .
+          docker build --provenance=false -t swr.cn-north-4.myhuaweicloud.com/cloud-course-ks/frontend:${{ github.sha }} .
           docker push swr.cn-north-4.myhuaweicloud.com/cloud-course-ks/frontend:${{ github.sha }}
