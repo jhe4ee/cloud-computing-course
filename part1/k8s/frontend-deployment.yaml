@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: frontend
-        image: swr.cn-north-4.myhuaweicloud.com/<YOUR_ORG>/frontend:v1
+        image: swr.cn-north-4.myhuaweicloud.com/cloud-course-ks/frontend:v1
         ports:
         - containerPort: 80
         resources:

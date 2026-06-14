@@ -8,13 +8,13 @@
 docker load -i monitoring-all.tar
 
 # 2. 重新打 tag 并推送
-SWR="swr.cn-north-4.myhuaweicloud.com/<YOUR_ORG>"
+SWR="swr.cn-north-4.myhuaweicloud.com/cloud-course-ks"
 docker tag swr.cn-east-3.myhuaweicloud.com/cloud-course-2025212245/grafana:12.4.3 ${SWR}/grafana:12.4.3
 # ... (其余镜像同理，见离线包 README)
 docker push ${SWR}/grafana:12.4.3
 # ... (推送所有镜像)
 
-# 3. 替换 monitoring-values.yaml 中的 <YOUR_ORG> 并安装
+# 3. 替换 monitoring-values.yaml 中的 cloud-course-ks 并安装
 helm upgrade --install monitoring kube-prometheus-stack-83.7.0.tgz \
   -n monitoring --create-namespace \
   -f bonus/monitoring/monitoring-values.yaml

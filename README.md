@@ -58,7 +58,7 @@ docker compose up --build
 
 ### 2. 部署到 CCE
 ```bash
-# 替换所有 YAML 中的 <YOUR_ORG> 为你的 SWR 组织名
+# 替换所有 YAML 中的 cloud-course-ks 为你的 SWR 组织名
 # 依次执行:
 kubectl apply -f part1/k8s/secret.yaml
 kubectl apply -f part1/k8s/configmap.yaml

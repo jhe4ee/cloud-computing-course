@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: backend
-        image: swr.cn-north-4.myhuaweicloud.com/<YOUR_ORG>/backend:v1
+        image: swr.cn-north-4.myhuaweicloud.com/cloud-course-ks/backend:v1
         ports:
         - containerPort: 5000
         resources:
