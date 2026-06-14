@@ -7,45 +7,53 @@
 \@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces 云平台与集群配置}}{2}{table.caption.1}\protected@file@percent }
 \@writefile{toc}{\contentsline {section}{\numberline {2}第一部分：云平台部署（Part 1）}{2}{section.2}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.1}任务1：应用容器化与SWR推送}{2}{subsection.2.1}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Docker Compose 本地联调 + curl /api/ping 测试}}{3}{figure.caption.2}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces SWR 镜像仓库列表（backend:v1, frontend:v1）}}{3}{figure.caption.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.2}任务2：CCE 集群搭建}{3}{subsection.2.2}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces kubectl get nodes -o wide（3节点 Ready，v1.33.10）}}{4}{figure.caption.4}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Docker Compose up --build 启动日志}}{3}{figure.caption.2}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces curl localhost:5000/api/ping 返回 \{"status":"ok"\}}}{3}{figure.caption.3}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces SWR 控制台镜像列表（backend:v1, frontend:v1）}}{3}{figure.caption.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.2}任务2：CCE 集群搭建}{4}{subsection.2.2}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces kubectl get nodes -o wide（3节点 Ready，v1.33.10）}}{4}{figure.caption.5}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.3}任务3：Kubernetes 应用部署}{4}{subsection.2.3}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces kubectl get pods（全 Running）}}{5}{figure.caption.5}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces curl ELB 公网 IP /api/ping 返回 \{"status":"ok"\}}}{5}{figure.caption.6}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces kubectl get pods（backend×2 + frontend + redis 全 Running）}}{4}{figure.caption.6}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces curl ELB 公网 IP 120.46.75.132/api/ping 返回 \{"status":"ok"\}}}{5}{figure.caption.7}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.4}任务4：持久化存储（PVC）}{5}{subsection.2.4}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces PVC Bound + SET testkey / GET testkey 验证写入}}{5}{figure.caption.7}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces 删除 Redis Pod 后新 Pod 仍返回 "hello"（持久化成功）}}{6}{figure.caption.8}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces kubectl get pvc — redis-data-pvc Status=Bound}}{5}{figure.caption.8}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {8}{\ignorespaces redis-cli SET testkey "hello" → GET testkey 返回 hello}}{5}{figure.caption.9}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {9}{\ignorespaces 删除 Redis Pod 后新 Pod GET testkey 仍返回 hello（持久化验证）}}{5}{figure.caption.10}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.5}任务5：ConfigMap Volume 挂载}{6}{subsection.2.5}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {8}{\ignorespaces ConfigMap Volume 挂载：nginx.conf 端口更新为 listen 8080}}{6}{figure.caption.9}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {10}{\ignorespaces ConfigMap Volume 挂载：kubectl exec 验证 nginx.conf 已变为 listen 8080}}{6}{figure.caption.11}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.6}任务6：HPA 弹性伸缩}{6}{subsection.2.6}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {9}{\ignorespaces HPA 扩容：Pod 数从 1 扩展到 4}}{7}{figure.caption.10}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {10}{\ignorespaces HPA 缩容：Pod 数恢复至 1}}{7}{figure.caption.11}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {3}第二部分：Spark 大数据分析（Part 2 - 方向A）}{7}{section.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.1}A-0：Spark Operator 环境部署}{7}{subsection.3.1}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {11}{\ignorespaces WordCount Driver Pod 状态变为 Completed}}{7}{figure.caption.12}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {12}{\ignorespaces WordCount 日志输出：Top 10 words 结果}}{8}{figure.caption.13}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {11}{\ignorespaces kubectl get hpa -w：CPU 飙升至 280\%/500\%，REPLICAS 从 1 扩到 4}}{6}{figure.caption.12}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {12}{\ignorespaces 使用 dd 命令施加 CPU 压力触发 HPA 扩容}}{7}{figure.caption.13}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {13}{\ignorespaces 扩容结果：kubectl get pods 显示 4 个 backend Pod}}{7}{figure.caption.14}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {14}{\ignorespaces 缩容后 Pod 数降回 1 个（运行 7m11s）}}{7}{figure.caption.15}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {15}{\ignorespaces 缩容后稳定状态：1 个 backend Pod 运行 18m}}{7}{figure.caption.16}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {3}第二部分：Spark 大数据分析（Part 2 - 方向A）}{8}{section.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.1}A-0：Spark Operator 环境部署}{8}{subsection.3.1}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {16}{\ignorespaces WordCount Driver Pod 状态变为 Completed}}{8}{figure.caption.17}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {3.2}A-1：数据清洗}{8}{subsection.3.2}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {13}{\ignorespaces 数据清洗：Schema + 缺失值统计 + 清洗前后行数对比}}{8}{figure.caption.14}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {14}{\ignorespaces 清洗后数据统计（describe 结果）}}{9}{figure.caption.15}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.3}A-2：Spark SQL 统计分析}{9}{subsection.3.3}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {15}{\ignorespaces A-2 四个 Spark SQL 查询结果（GROUP BY / Top-N / 趋势 / 窗口函数）}}{9}{figure.caption.16}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.4}A-3：性能对比与 Amdahl 分析}{10}{subsection.3.4}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces 性能对比结果}}{10}{table.caption.17}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {16}{\ignorespaces A-3 性能对比：PySpark local[1] 7.46s vs local[2] 2.03s}}{10}{figure.caption.18}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {4}附加题}{10}{section.4}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.1}附加题1：云原生监控系统（Prometheus + Grafana）}{10}{subsection.4.1}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {17}{\ignorespaces 监控命名空间全部 Pod 状态为 Running}}{11}{figure.caption.19}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {18}{\ignorespaces Grafana 健康检查返回 \{"database":"ok", "version":"12.4.3"\}}}{11}{figure.caption.20}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.2}附加题2：CI/CD 持续集成部署}{11}{subsection.4.2}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {19}{\ignorespaces GitHub Actions CI/CD 流水线全部 Passed}}{12}{figure.caption.21}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {20}{\ignorespaces CI/CD 流水线各步骤详情}}{13}{figure.caption.22}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.3}附加题3：前沿专题 — K3s + MQTT 边缘计算}{13}{subsection.4.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.3.1}背景与动机}{13}{subsubsection.4.3.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.3.2}系统架构设计}{13}{subsubsection.4.3.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.3.3}MQTT 协议在弱网环境下的适用性分析}{14}{subsubsection.4.3.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.3.4}代码实现思路}{14}{subsubsection.4.3.4}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.3.5}云边协同的延迟挑战与优化方向}{14}{subsubsection.4.3.5}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {5}总结}{15}{section.5}\protected@file@percent }
-\gdef \@abspage@last{16}
+\@writefile{lof}{\contentsline {figure}{\numberline {17}{\ignorespaces 数据 Schema 定义 + 前 5 行预览（含《肖申克的救赎》等）}}{9}{figure.caption.18}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {18}{\ignorespaces 缺失值统计：Total rows: 117156，各字段缺失值数量}}{9}{figure.caption.19}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {19}{\ignorespaces 清洗结果：Rows after dropna: 63670，describe 统计表}}{9}{figure.caption.20}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.3}A-2：Spark SQL 统计分析}{10}{subsection.3.3}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {20}{\ignorespaces Query 1（各国平均评分 Top 15）+ Query 2（Top 10 高评分电影）}}{11}{figure.caption.21}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {21}{\ignorespaces Query 3：1990-2020 年评分趋势（按年统计）}}{12}{figure.caption.22}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {22}{\ignorespaces Query 4：窗口函数 — 每年 Top 3 电影（2015-2020）}}{13}{figure.caption.23}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.4}A-3：性能对比与 Amdahl 分析}{13}{subsection.3.4}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces 性能对比结果}}{13}{table.caption.24}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {23}{\ignorespaces spark-perf-driver Pod 状态变为 Completed}}{14}{figure.caption.25}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {24}{\ignorespaces PySpark local[1] 7.46s vs local[2] 2.03s（加速比 3.67×）}}{14}{figure.caption.26}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {4}附加题}{14}{section.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.1}附加题1：云原生监控系统（Prometheus + Grafana）}{14}{subsection.4.1}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {25}{\ignorespaces 监控命名空间：Grafana + node-exporter 全部 Running}}{15}{figure.caption.27}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {26}{\ignorespaces Grafana 健康检查返回 \{"database":"ok", "version":"12.4.3"\}}}{15}{figure.caption.28}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.2}附加题2：CI/CD 持续集成部署}{15}{subsection.4.2}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {27}{\ignorespaces GitHub Actions 流水线全部 Passed（绿色 ✓）}}{15}{figure.caption.29}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {28}{\ignorespaces CI/CD 各步骤（Checkout、Login、Build Backend/Frontend）均 Success}}{16}{figure.caption.30}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.3}附加题3：前沿专题 — K3s + MQTT 边缘计算}{16}{subsection.4.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.3.1}背景与动机}{16}{subsubsection.4.3.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.3.2}系统架构设计}{16}{subsubsection.4.3.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.3.3}MQTT 协议在弱网环境下的适用性分析}{16}{subsubsection.4.3.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.3.4}代码实现思路}{17}{subsubsection.4.3.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.3.5}云边协同的延迟挑战与优化方向}{17}{subsubsection.4.3.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {5}总结}{17}{section.5}\protected@file@percent }
+\gdef \@abspage@last{19}
