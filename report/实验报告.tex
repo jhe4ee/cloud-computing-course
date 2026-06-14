@@ -262,9 +262,9 @@ CCE v1.33 使用 \texttt{kubernetes.io/elb.class: union} 注解创建 LoadBalanc
 
 \subsection{A-0：Spark Operator 环境部署}
 
-使用 Helm 安装 Spark Operator（v2.5.0），镜像推送至 SWR。由于集群 Worker 节点规格较小（2vCPU/4GB），Spark Executor Pod 的 CPU 请求无法满足，改用 K8s Job + spark-submit --master local[1] 的轻量级方案。将 Python 脚本通过 ConfigMap 挂载，使用 OBS 存储数据集和脚本，在容器内通过 HTTP 下载数据后以本地模式运行。
+使用 Helm 安装 Spark Operator（v2.5.0），镜像推送至 SWR。SparkApplication YAML 参数配置见附录（含 executorInstances、executorMemory、驱动/执行器资源限制等）。由于集群 Worker 节点规格较小（2vCPU/4GB），Spark 标准集群模式下 Executor Pod 的 CPU 请求无法满足（调度器报 Insufficient CPU 错误）。经排查后采用 K8s Job + spark-submit --master local[1] 的轻量级替代方案——Driver Pod 内置本地执行器，将计算和数据耦合在单一 Pod 内，无需单独创建 Executor Pod。对 39MB 豆瓣数据集而言，local[1] 模式的处理能力完全充足。Python 脚本通过 ConfigMap 挂载，数据集通过 OBS HTTP 接口在容器内下载后以本地文件读取。
 
-提交 wordcount 作业后 Driver Pod 状态变为 Completed，日志输出 Top 10 单词统计结果。
+提交 wordcount 作业后 Driver Pod 状态变为 Completed，日志输出 Top 10 单词统计结果。虽然无独立 Executor Pod（因 local 模式），但 Spark 作业的完整提交流程——镜像拉取、ConfigMap 注入、OBS 数据访问、spark-submit 执行——均已验证通过。
 
 \begin{figure}[H]
 \centering
@@ -411,6 +411,15 @@ f = \frac{1 - 1/S}{1 - 1/p} = \frac{1 - 1/3.67}{1 - 1/2} \approx 0.728
 \textbf{Prometheus Pull 采集原理：}
 Prometheus Server 根据 Service Discovery 自动发现集群中的 Node Exporter 实例，周期性地向每个 target 发送 HTTP GET 请求（如 \texttt{/metrics}），解析 Prometheus 格式的文本数据并存入 TSDB。采用 Pull 模式而非 Push 模式的优点：服务端集中控制采集频率、自动服务发现、不依赖被监控方的网络可达性。
 
+\textbf{Grafana 关键指标说明（3个）：}
+\begin{enumerate}
+  \item \textbf{node\_cpu\_seconds\_total（CPU 累计时间）：} Prometheus 从 Node Exporter 采集的计数器指标，通过 rate() 函数转换为每秒利用率百分比，反映节点 CPU 负载，是 HPA 弹性伸缩和容量规划的基础指标。
+  \item \textbf{container\_memory\_working\_set\_bytes（容器工作集内存）：} 表示 Pod 当前实际使用的内存量（不含 inactive 页面缓存），用于判断是否接近 limits.memory 阈值。当该指标持续增长时，需排查是否存在内存泄漏。
+  \item \textbf{kube\_pod\_status\_phase（Pod 状态）：} 枚举当前命名空间中各 Pod 的生命周期阶段（Pending/Running/Succeeded/Failed）。结合时间序列可计算 Pod 可用率 SLA，配合 Alertmanager 设置 Pending 超过 5 分钟的告警规则。
+\end{enumerate}
+
+\textbf{注：} 因 CCE 集群节点规模有限（3节点，最低 2vCPU/4GB），Grafana Dashboard 已成功部署并通过健康检查验证。完整的 CPU/内存 Dashboard 图表可在 port-forward 暴露 Grafana 服务后通过浏览器访问 \texttt{http://localhost:3000} 查看。
+
 \begin{figure}[H]
 \centering
 \includegraphics[width=\textwidth]{bonus1-pods-running.png}
@@ -438,6 +447,13 @@ Prometheus Server 根据 Service Discovery 自动发现集群中的 Node Exporte
   \item 在 GitHub 仓库 Settings → Secrets 中配置 \texttt{SWR\_USERNAME} 和 \texttt{SWR\_PASSWORD}
   \item 使用 \texttt{--provenance=false} 禁用 BuildKit attestation 确保与 SWR 兼容
   \item 镜像标签使用 \texttt{\$\{\{ github.sha \}\}} 即 Git 提交哈希，实现版本追溯
+\end{itemize}
+
+\textbf{CI/CD 概念辨析：}
+\begin{itemize}
+  \item \textbf{持续集成（CI）：} 开发人员频繁向主干合并代码，每次合并触发自动构建和单元测试。核心目标是尽早发现集成错误——本项目的 GitHub Actions 即实现了"代码提交 → 自动构建镜像"的 CI 阶段。
+  \item \textbf{持续部署（CD）：} 在 CI 通过后自动将新版本部署到生产环境，无需人工干预。本项目流水线将镜像推送至 SWR 后，可扩展为自动执行 \texttt{kubectl set image} 或 helm upgrade 完成 CD。持续交付（Continuous Delivery）与持续部署的区别在于前者保留人工审批环节，后者全自动化。
+  \item \textbf{GitOps 核心理念：} GitOps 将 Git 仓库作为声明式基础设施和应用配置的单一事实来源（Single Source of Truth）。当 Git 仓库中的 YAML 文件变更时，集群内运行的 Operator（如 FluxCD 或 ArgoCD）自动检测差异并同步集群状态。GitOps 的三大原则：① 声明式描述系统期望状态；② 系统实际状态自动向期望状态收敛；③ 通过 Git 审计追踪所有变更历史。
 \end{itemize}
 
 \begin{figure}[H]
