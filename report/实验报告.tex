@@ -271,6 +271,11 @@ CCE v1.33 使用 \texttt{kubernetes.io/elb.class: union} 注解创建 LoadBalanc
 \includegraphics[width=\textwidth]{a0-wordcount-completed.png}
 \caption{WordCount Driver Pod 状态变为 Completed}
 \end{figure}
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{a0-wordcount-top10.png}
+\caption{WordCount 日志输出：Top 10 words 统计结果}
+\end{figure}
 
 \subsection{A-1：数据清洗}
 
@@ -418,7 +423,6 @@ Prometheus Server 根据 Service Discovery 自动发现集群中的 Node Exporte
   \item \textbf{kube\_pod\_status\_phase（Pod 状态）：} 枚举当前命名空间中各 Pod 的生命周期阶段（Pending/Running/Succeeded/Failed）。结合时间序列可计算 Pod 可用率 SLA，配合 Alertmanager 设置 Pending 超过 5 分钟的告警规则。
 \end{enumerate}
 
-\textbf{注：} 因 CCE 集群节点规模有限（3节点，最低 2vCPU/4GB），Grafana Dashboard 已成功部署并通过健康检查验证。完整的 CPU/内存 Dashboard 图表可在 port-forward 暴露 Grafana 服务后通过浏览器访问 \texttt{http://localhost:3000} 查看。
 
 \begin{figure}[H]
 \centering
@@ -429,6 +433,16 @@ Prometheus Server 根据 Service Discovery 自动发现集群中的 Node Exporte
 \centering
 \includegraphics[width=0.8\textwidth]{bonus1-grafana-health-check.png}
 \caption{Grafana 健康检查返回 \{"database":"ok", "version":"12.4.3"\}}
+\end{figure}
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{bonus1-cpu-dashboard.png}
+\caption{Grafana Dashboard：节点 CPU 利用率折线图}
+\end{figure}
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{bonus1-memory-dashboard.png}
+\caption{Grafana Dashboard：各 Pod 内存使用柱状图}
 \end{figure}
 
 \subsection{附加题2：CI/CD 持续集成部署}
