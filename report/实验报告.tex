@@ -122,13 +122,18 @@ Worker节点 & 3 节点（2 × 2vCPU/4GB + 1 × 2vCPU/8GB） \\
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.9\textwidth]{task1-docker-compose-curl.png}
-\caption{Docker Compose 本地联调 + curl /api/ping 测试}
+\includegraphics[width=0.9\textwidth]{task1-docker-compose-log.png}
+\caption{Docker Compose up --build 启动日志}
 \end{figure}
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.8\textwidth]{task1-swr-images.png}
-\caption{SWR 镜像仓库列表（backend:v1, frontend:v1）}
+\includegraphics[width=0.8\textwidth]{task1-curl-local-ping.png}
+\caption{curl localhost:5000/api/ping 返回 \{"status":"ok"\}}
+\end{figure}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\textwidth]{task1-swr-console.png}
+\caption{SWR 控制台镜像列表（backend:v1, frontend:v1）}
 \end{figure}
 
 \textbf{技术要点：}
@@ -144,7 +149,7 @@ Worker节点 & 3 节点（2 × 2vCPU/4GB + 1 × 2vCPU/8GB） \\
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=\textwidth]{task2-kubectl-get-nodes.png}
+\includegraphics[width=\textwidth]{task2-nodes-ready.png}
 \caption{kubectl get nodes -o wide（3节点 Ready，v1.33.10）}
 \end{figure}
 
@@ -163,13 +168,13 @@ Worker节点 & 3 节点（2 × 2vCPU/4GB + 1 × 2vCPU/8GB） \\
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.9\textwidth]{task3-kubectl-get-pods-running.png}
-\caption{kubectl get pods（全 Running）}
+\includegraphics[width=0.9\textwidth]{task3-pods-running.png}
+\caption{kubectl get pods（backend×2 + frontend + redis 全 Running）}
 \end{figure}
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.8\textwidth]{task3-curl-elb-ping.png}
-\caption{curl ELB 公网 IP /api/ping 返回 \{"status":"ok"\}}
+\includegraphics[width=0.9\textwidth]{task3-elb-curl-ping.png}
+\caption{curl ELB 公网 IP 120.46.75.132/api/ping 返回 \{"status":"ok"\}}
 \end{figure}
 
 \textbf{遇到的问题与解决：}
@@ -181,13 +186,18 @@ CCE v1.33 使用 \texttt{kubernetes.io/elb.class: union} 注解创建 LoadBalanc
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.9\textwidth]{task4-pvc-bound-set-get.png}
-\caption{PVC Bound + SET testkey / GET testkey 验证写入}
+\includegraphics[width=0.9\textwidth]{task4-pvc-bound.png}
+\caption{kubectl get pvc — redis-data-pvc Status=Bound}
 \end{figure}
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.9\textwidth]{task4-pvc-delete-pod-get-hello.png}
-\caption{删除 Redis Pod 后新 Pod 仍返回 "hello"（持久化成功）}
+\includegraphics[width=0.9\textwidth]{task4-redis-set-get.png}
+\caption{redis-cli SET testkey "hello" → GET testkey 返回 hello}
+\end{figure}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.9\textwidth]{task4-persist-verify.png}
+\caption{删除 Redis Pod 后新 Pod GET testkey 仍返回 hello（持久化验证）}
 \end{figure}
 
 \textbf{原理分析：} CSI（Container Storage Interface）是 Kubernetes 的存储抽象层，华为云 CCE 的 csi-disk StorageClass 基于云硬盘（EVS），提供持久化块存储。当 Pod 被删除时，PVC 与 PV 的绑定关系不变，新创建的 Pod 重新挂载同一 PV，数据得以保留。
@@ -198,8 +208,8 @@ CCE v1.33 使用 \texttt{kubernetes.io/elb.class: union} 注解创建 LoadBalanc
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=\textwidth]{task5-configmap-listen-8080.png}
-\caption{ConfigMap Volume 挂载：nginx.conf 端口更新为 listen 8080}
+\includegraphics[width=\textwidth]{task5-nginx-8080.png}
+\caption{ConfigMap Volume 挂载：kubectl exec 验证 nginx.conf 已变为 listen 8080}
 \end{figure}
 
 \textbf{Volume 挂载 vs envFrom 区别：}
@@ -214,13 +224,28 @@ CCE v1.33 使用 \texttt{kubernetes.io/elb.class: union} 注解创建 LoadBalanc
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.9\textwidth]{task6-hpa-scale-up.png}
-\caption{HPA 扩容：Pod 数从 1 扩展到 4}
+\includegraphics[width=0.9\textwidth]{task6-hpa-cpu-spike.png}
+\caption{kubectl get hpa -w：CPU 飙升至 280\%/500\%，REPLICAS 从 1 扩到 4}
 \end{figure}
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.9\textwidth]{task6-hpa-scale-down.png}
-\caption{HPA 缩容：Pod 数恢复至 1}
+\includegraphics[width=0.9\textwidth]{task6-hpa-pressure.png}
+\caption{使用 dd 命令施加 CPU 压力触发 HPA 扩容}
+\end{figure}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.9\textwidth]{task6-scale-up-4pods.png}
+\caption{扩容结果：kubectl get pods 显示 4 个 backend Pod}
+\end{figure}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.9\textwidth]{task6-scale-down-1pod.png}
+\caption{缩容后 Pod 数降回 1 个（运行 7m11s）}
+\end{figure}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.9\textwidth]{task6-stable-1pod.png}
+\caption{缩容后稳定状态：1 个 backend Pod 运行 18m}
 \end{figure}
 
 \textbf{HPA 分析：}
@@ -243,13 +268,8 @@ CCE v1.33 使用 \texttt{kubernetes.io/elb.class: union} 注解创建 LoadBalanc
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=\textwidth]{a0-wordcount-pod-completed.png}
+\includegraphics[width=\textwidth]{a0-wordcount-completed.png}
 \caption{WordCount Driver Pod 状态变为 Completed}
-\end{figure}
-\begin{figure}[H]
-\centering
-\includegraphics[width=\textwidth]{a0-wordcount-top10-words.png}
-\caption{WordCount 日志输出：Top 10 words 结果}
 \end{figure}
 
 \subsection{A-1：数据清洗}
@@ -264,13 +284,18 @@ CCE v1.33 使用 \texttt{kubernetes.io/elb.class: union} 注解创建 LoadBalanc
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=\textwidth]{a1-data-cleaning-stats.png}
-\caption{数据清洗：Schema + 缺失值统计 + 清洗前后行数对比}
+\includegraphics[width=\textwidth]{a1-schema.png}
+\caption{数据 Schema 定义 + 前 5 行预览（含《肖申克的救赎》等）}
 \end{figure}
 \begin{figure}[H]
 \centering
-\includegraphics[width=\textwidth]{a1-data-cleaning-result.png}
-\caption{清洗后数据统计（describe 结果）}
+\includegraphics[width=\textwidth]{a1-missing-values.png}
+\caption{缺失值统计：Total rows: 117156，各字段缺失值数量}
+\end{figure}
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{a1-dropna-result.png}
+\caption{清洗结果：Rows after dropna: 63670，describe 统计表}
 \end{figure}
 
 \subsection{A-2：Spark SQL 统计分析}
@@ -304,8 +329,18 @@ CCE v1.33 使用 \texttt{kubernetes.io/elb.class: union} 注解创建 LoadBalanc
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.9\textwidth]{a2-sql-queries.png}
-\caption{A-2 四个 Spark SQL 查询结果（GROUP BY / Top-N / 趋势 / 窗口函数）}
+\includegraphics[width=0.9\textwidth]{a2-query1-2.png}
+\caption{Query 1（各国平均评分 Top 15）+ Query 2（Top 10 高评分电影）}
+\end{figure}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.9\textwidth]{a2-query3.png}
+\caption{Query 3：1990-2020 年评分趋势（按年统计）}
+\end{figure}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.9\textwidth]{a2-query4.png}
+\caption{Query 4：窗口函数 — 每年 Top 3 电影（2015-2020）}
 \end{figure}
 
 \subsection{A-3：性能对比与 Amdahl 分析}
@@ -340,8 +375,13 @@ f = \frac{1 - 1/S}{1 - 1/p} = \frac{1 - 1/3.67}{1 - 1/2} \approx 0.728
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.9\textwidth]{a3-performance-compare.png}
-\caption{A-3 性能对比：PySpark local[1] 7.46s vs local[2] 2.03s}
+\includegraphics[width=0.9\textwidth]{a3-perf-completed.png}
+\caption{spark-perf-driver Pod 状态变为 Completed}
+\end{figure}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.9\textwidth]{a3-perf-times.png}
+\caption{PySpark local[1] 7.46s vs local[2] 2.03s（加速比 3.67×）}
 \end{figure}
 
 % ============================================================
@@ -366,12 +406,12 @@ Prometheus Server 根据 Service Discovery 自动发现集群中的 Node Exporte
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=\textwidth]{bonus1-monitoring-pods.png}
-\caption{监控命名空间全部 Pod 状态为 Running}
+\includegraphics[width=\textwidth]{bonus1-pods-running.png}
+\caption{监控命名空间：Grafana + node-exporter 全部 Running}
 \end{figure}
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.8\textwidth]{bonus1-grafana-health.png}
+\includegraphics[width=0.8\textwidth]{bonus1-grafana-health-check.png}
 \caption{Grafana 健康检查返回 \{"database":"ok", "version":"12.4.3"\}}
 \end{figure}
 
@@ -395,13 +435,13 @@ Prometheus Server 根据 Service Discovery 自动发现集群中的 Node Exporte
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=\textwidth]{bonus2-cicd-actions-passed.png}
-\caption{GitHub Actions CI/CD 流水线全部 Passed}
+\includegraphics[width=\textwidth]{bonus2-actions-green.png}
+\caption{GitHub Actions 流水线全部 Passed（绿色 ✓）}
 \end{figure}
 \begin{figure}[H]
 \centering
-\includegraphics[width=\textwidth]{bonus2-cicd-details.png}
-\caption{CI/CD 流水线各步骤详情}
+\includegraphics[width=\textwidth]{bonus2-actions-details.png}
+\caption{CI/CD 各步骤（Checkout、Login、Build Backend/Frontend）均 Success}
 \end{figure}
 
 \subsection{附加题3：前沿专题 — K3s + MQTT 边缘计算}
