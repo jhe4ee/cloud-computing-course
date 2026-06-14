@@ -17,6 +17,7 @@
 
 % -------- 图表支持 --------
 \usepackage{graphicx}
+\graphicspath{{pic/}}
 \usepackage{float}
 \usepackage{booktabs}
 \usepackage{longtable}
@@ -119,12 +120,16 @@ Worker节点 & 3 节点（2 × 2vCPU/4GB + 1 × 2vCPU/8GB） \\
   \item SWR 控制台显示 backend:v1 和 frontend:v1 镜像
 \end{itemize}
 
-\fbox{%
-  \parbox{\textwidth}{%
-    \centering
-    [在此插入：docker compose 启动 + curl 返回 + SWR镜像列表 三张截图]
-  }%
-}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.9\textwidth]{task1-docker-compose-curl.png}
+\caption{Docker Compose 本地联调 + curl /api/ping 测试}
+\end{figure}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\textwidth]{task1-swr-images.png}
+\caption{SWR 镜像仓库列表（backend:v1, frontend:v1）}
+\end{figure}
 
 \textbf{技术要点：}
 \begin{itemize}
@@ -137,12 +142,11 @@ Worker节点 & 3 节点（2 × 2vCPU/4GB + 1 × 2vCPU/8GB） \\
 
 在华为云 CCE 控制台创建 Standard 类型集群，选择 Kubernetes v1.33 版本，Yangtse CNI 网络插件，IPVS 服务转发模式，3 个 Worker 节点（含 1 个 2vCPU/8GB 节点用于 Spark 作业）。集群创建后通过 CloudShell 执行 \texttt{kubectl get nodes -o wide} 验证所有节点状态为 Ready。
 
-\fbox{%
-  \parbox{\textwidth}{%
-    \centering
-    [在此插入：kubectl get nodes -o wide 截图（3节点Ready，含VERSION列）]
-  }%
-}
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{task2-kubectl-get-nodes.png}
+\caption{kubectl get nodes -o wide（3节点 Ready，v1.33.10）}
+\end{figure}
 
 \subsection{任务3：Kubernetes 应用部署}
 
@@ -157,12 +161,16 @@ Worker节点 & 3 节点（2 × 2vCPU/4GB + 1 × 2vCPU/8GB） \\
 
 \textbf{部署顺序：} Secret → ConfigMap → Redis PVC → Redis Deployment → Backend Deployment → Frontend Deployment → Service
 
-\fbox{%
-  \parbox{\textwidth}{%
-    \centering
-    [在此插入：kubectl get pods（全Running） + 浏览器访问 ELB公网IP/api/ping 返回 \{"status":"ok"\} 截图]
-  }%
-}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.9\textwidth]{task3-kubectl-get-pods-running.png}
+\caption{kubectl get pods（全 Running）}
+\end{figure}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\textwidth]{task3-curl-elb-ping.png}
+\caption{curl ELB 公网 IP /api/ping 返回 \{"status":"ok"\}}
+\end{figure}
 
 \textbf{遇到的问题与解决：}
 CCE v1.33 使用 \texttt{kubernetes.io/elb.class: union} 注解创建 LoadBalancer Service 时，Cloud Provider 自动创建的 ELB 监听器未能正确绑定端口，EXTERNAL-IP 长时间处于 \texttt{<pending>} 状态。解决方案：手动在 ELB 控制台创建共享型负载均衡器，然后在 Service 中通过 \texttt{kubernetes.io/elb.id} 注解直接绑定已有 ELB 实例，EXTERNAL-IP 立即生效。
@@ -171,12 +179,16 @@ CCE v1.33 使用 \texttt{kubernetes.io/elb.class: union} 注解创建 LoadBalanc
 
 创建 storageClassName 为 csi-disk 的 PVC（10Gi），挂载到 Redis Deployment 的 /data 目录。验证流程：\texttt{SET testkey "hello"} → \texttt{GET testkey} 确认写入 → 删除 Redis Pod → 等待新 Pod 自动创建 → 再次 \texttt{GET testkey} 确认数据未丢失。
 
-\fbox{%
-  \parbox{\textwidth}{%
-    \centering
-    [在此插入三张截图：PVC Bound + SET/GET 写入 + Pod删除后 GET 仍返回 hello]
-  }%
-}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.9\textwidth]{task4-pvc-bound-set-get.png}
+\caption{PVC Bound + SET testkey / GET testkey 验证写入}
+\end{figure}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.9\textwidth]{task4-pvc-delete-pod-get-hello.png}
+\caption{删除 Redis Pod 后新 Pod 仍返回 "hello"（持久化成功）}
+\end{figure}
 
 \textbf{原理分析：} CSI（Container Storage Interface）是 Kubernetes 的存储抽象层，华为云 CCE 的 csi-disk StorageClass 基于云硬盘（EVS），提供持久化块存储。当 Pod 被删除时，PVC 与 PV 的绑定关系不变，新创建的 Pod 重新挂载同一 PV，数据得以保留。
 
@@ -184,12 +196,11 @@ CCE v1.33 使用 \texttt{kubernetes.io/elb.class: union} 注解创建 LoadBalanc
 
 修改 nginx-config ConfigMap 中的端口号从 80 改为 8080，通过 kubectl patch 更新。由于 nginx Pod 使用 subPath 方式挂载 nginx 配置文件，需删除 Frontend Pod 触发重建，新 Pod 启动后 exec 验证 \texttt{/etc/nginx/conf.d/default.conf} 中端口已更新为 8080。验证完成后恢复原配置。
 
-\fbox{%
-  \parbox{\textwidth}{%
-    \centering
-    [在此插入：kubectl exec 验证 nginx.conf 包含 listen 8080 截图]
-  }%
-}
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{task5-configmap-listen-8080.png}
+\caption{ConfigMap Volume 挂载：nginx.conf 端口更新为 listen 8080}
+\end{figure}
 
 \textbf{Volume 挂载 vs envFrom 区别：}
 \begin{itemize}
@@ -201,12 +212,16 @@ CCE v1.33 使用 \texttt{kubernetes.io/elb.class: union} 注解创建 LoadBalanc
 
 创建 HorizontalPodAutoscaler，目标 CPU 利用率 60\%，minReplicas=1，maxReplicas=4。首先在 CCE 插件中心安装 metrics-server，在 backend Deployment 中设置 resources.requests（cpu: 100m）。测试时将阈值临时降至 10\% 以加速触发，通过 kubectl exec 在 backend Pod 内运行 yes 命令增加 CPU 负载。观察到 Pod 数从 1 自动扩展到 4，停止压测并删除 HPA 后手动缩回 1。
 
-\fbox{%
-  \parbox{\textwidth}{%
-    \centering
-    [在此插入扩容截图（Pod 1→4）+ 缩容截图（Pod 恢复1）]
-  }%
-}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.9\textwidth]{task6-hpa-scale-up.png}
+\caption{HPA 扩容：Pod 数从 1 扩展到 4}
+\end{figure}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.9\textwidth]{task6-hpa-scale-down.png}
+\caption{HPA 缩容：Pod 数恢复至 1}
+\end{figure}
 
 \textbf{HPA 分析：}
 \begin{itemize}
@@ -226,12 +241,16 @@ CCE v1.33 使用 \texttt{kubernetes.io/elb.class: union} 注解创建 LoadBalanc
 
 提交 wordcount 作业后 Driver Pod 状态变为 Completed，日志输出 Top 10 单词统计结果。
 
-\fbox{%
-  \parbox{\textwidth}{%
-    \centering
-    [在此插入：Spark wordcount Driver Pod Completed 截图 + Top 10 words 日志截图]
-  }%
-}
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{a0-wordcount-pod-completed.png}
+\caption{WordCount Driver Pod 状态变为 Completed}
+\end{figure}
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{a0-wordcount-top10-words.png}
+\caption{WordCount 日志输出：Top 10 words 结果}
+\end{figure}
 
 \subsection{A-1：数据清洗}
 
@@ -243,12 +262,16 @@ CCE v1.33 使用 \texttt{kubernetes.io/elb.class: union} 注解创建 LoadBalanc
 
 \textbf{策略2 - 填充非关键字段：} 对 genres、countries、directors 字段使用占位字符串 ``未知'' 填充，不影响后续分析但保留了行数。
 
-\fbox{%
-  \parbox{\textwidth}{%
-    \centering
-    [在此插入：数据清洗日志截图（Schema + Missing values + 清洗后行数）]
-  }%
-}
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{a1-data-cleaning-stats.png}
+\caption{数据清洗：Schema + 缺失值统计 + 清洗前后行数对比}
+\end{figure}
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{a1-data-cleaning-result.png}
+\caption{清洗后数据统计（describe 结果）}
+\end{figure}
 
 \subsection{A-2：Spark SQL 统计分析}
 
@@ -279,12 +302,11 @@ CCE v1.33 使用 \texttt{kubernetes.io/elb.class: union} 注解创建 LoadBalanc
   \item 筛选 2015-2020 年每年评分最高的 3 部电影
 \end{itemize}
 
-\fbox{%
-  \parbox{\textwidth}{%
-    \centering
-    [在此插入四组SQL查询结果截图，每组附一句话分析]
-  }%
-}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.9\textwidth]{a2-sql-queries.png}
+\caption{A-2 四个 Spark SQL 查询结果（GROUP BY / Top-N / 趋势 / 窗口函数）}
+\end{figure}
 
 \subsection{A-3：性能对比与 Amdahl 分析}
 
@@ -316,12 +338,11 @@ f = \frac{1 - 1/S}{1 - 1/p} = \frac{1 - 1/3.67}{1 - 1/2} \approx 0.728
 \textbf{加速比超过 2× 的原因：}
 本地模式下双核共享内存和文件缓存，避免了网络通信开销。在真实的分布式集群中，executor 间需要通过 Shuffle 交换数据，加速比通常会低于线性值。
 
-\fbox{%
-  \parbox{\textwidth}{%
-    \centering
-    [在此插入：性能对比日志截图（local[1] 和 local[2] 的时间）]
-  }%
-}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.9\textwidth]{a3-performance-compare.png}
+\caption{A-3 性能对比：PySpark local[1] 7.46s vs local[2] 2.03s}
+\end{figure}
 
 % ============================================================
 % 附加题
@@ -343,12 +364,16 @@ f = \frac{1 - 1/S}{1 - 1/p} = \frac{1 - 1/3.67}{1 - 1/2} \approx 0.728
 \textbf{Prometheus Pull 采集原理：}
 Prometheus Server 根据 Service Discovery 自动发现集群中的 Node Exporter 实例，周期性地向每个 target 发送 HTTP GET 请求（如 \texttt{/metrics}），解析 Prometheus 格式的文本数据并存入 TSDB。采用 Pull 模式而非 Push 模式的优点：服务端集中控制采集频率、自动服务发现、不依赖被监控方的网络可达性。
 
-\fbox{%
-  \parbox{\textwidth}{%
-    \centering
-    [在此插入：kubectl get pods -n monitoring（全Running）+ Grafana 健康检查返回 ok 截图]
-  }%
-}
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{bonus1-monitoring-pods.png}
+\caption{监控命名空间全部 Pod 状态为 Running}
+\end{figure}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\textwidth]{bonus1-grafana-health.png}
+\caption{Grafana 健康检查返回 \{"database":"ok", "version":"12.4.3"\}}
+\end{figure}
 
 \subsection{附加题2：CI/CD 持续集成部署}
 
@@ -368,12 +393,16 @@ Prometheus Server 根据 Service Discovery 自动发现集群中的 Node Exporte
   \item 镜像标签使用 \texttt{\$\{\{ github.sha \}\}} 即 Git 提交哈希，实现版本追溯
 \end{itemize}
 
-\fbox{%
-  \parbox{\textwidth}{%
-    \centering
-    [在此插入：GitHub Actions 流水线全部 Passed 绿色截图]
-  }%
-}
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{bonus2-cicd-actions-passed.png}
+\caption{GitHub Actions CI/CD 流水线全部 Passed}
+\end{figure}
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{bonus2-cicd-details.png}
+\caption{CI/CD 流水线各步骤详情}
+\end{figure}
 
 \subsection{附加题3：前沿专题 — K3s + MQTT 边缘计算}
 
