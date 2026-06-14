@@ -15,7 +15,7 @@ from pyspark.sql.functions import col, count, avg, round as spark_round, desc, s
 # ============================================================
 print("=== Pandas (single-machine) ===")
 t_start = time.time()
-df_pd = pd.read_csv("douban_movies.csv", encoding="utf-8")
+df_pd = pd.read_csv("s3a://cloud-course-data-b62c/douban_movies.csv", encoding="utf-8")
 df_pd = df_pd.dropna(subset=["original_title", "directors"])
 df_pd["genres"] = df_pd["genres"].fillna("未知")
 
@@ -41,7 +41,7 @@ print("\n=== PySpark (executorInstances=1) ===")
 t_start = time.time()
 spark = SparkSession.builder.appName("PerfCompare-1exec").getOrCreate()
 
-df = spark.read.csv("douban_movies.csv", header=True, inferSchema=True, encoding="UTF-8")
+df = spark.read.csv("s3a://cloud-course-data-b62c/douban_movies.csv", header=True, inferSchema=True, encoding="UTF-8")
 df = df.dropna(subset=["original_title", "directors"])
 df = df.fillna({"genres": "未知"})
 

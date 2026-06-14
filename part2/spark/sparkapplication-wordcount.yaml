@@ -1,0 +1,29 @@
+apiVersion: sparkoperator.k8s.io/v1beta2
+kind: SparkApplication
+metadata:
+  name: pyspark-wordcount
+  namespace: default
+spec:
+  type: Python
+  pythonVersion: "3"
+  mode: cluster
+  image: swr.cn-north-4.myhuaweicloud.com/cloud-course-ks/pyspark:v9
+  mainApplicationFile: local:///tmp/wordcount.py
+  sparkVersion: "3.4.0"
+  restartPolicy:
+    type: Never
+  driver:
+    cores: 1
+    memory: "1g"
+    serviceAccount: spark
+  executor:
+    cores: 1
+    instances: 2
+    memory: "1g"
+  sparkConf:
+    spark.hadoop.fs.s3a.endpoint: "obs.cn-north-4.myhuaweicloud.com"
+    spark.hadoop.fs.s3a.access.key: "HPUACVNGAIRQVVA7MYJZ"
+    spark.hadoop.fs.s3a.secret.key: "tFfewBJtwIqmchRp0YrcYb9BMx0ksjBBFTMeSL8A"
+    spark.hadoop.fs.s3a.impl: "org.apache.hadoop.fs.s3a.S3AFileSystem"
+    spark.hadoop.fs.s3a.path.style.access: "true"
+    spark.hadoop.fs.s3a.connection.ssl.enabled: "true"

@@ -4,7 +4,7 @@ from pyspark.sql.functions import col, count, mean, stddev, min, max, when, isna
 spark = SparkSession.builder.appName("DataCleaning").getOrCreate()
 
 # Load dataset (supports both local path and s3a:// OBS path)
-df = spark.read.csv("douban_movies.csv", header=True, inferSchema=True, encoding="UTF-8")
+df = spark.read.csv("s3a://cloud-course-data-b62c/douban_movies.csv", header=True, inferSchema=True, encoding="UTF-8")
 
 print("=== Schema ===")
 df.printSchema()

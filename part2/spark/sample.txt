@@ -1,0 +1,14 @@
+Apache Spark is a fast and general engine for large-scale data processing
+Spark provides high level APIs in Java Scala Python and R
+Spark runs on Hadoop Mesos Kubernetes standalone or in the cloud
+It can access diverse data sources such as HDFS S3 and HBase
+Machine learning is supported through MLlib on Spark
+Spark SQL enables querying structured data using SQL
+Streaming data can be processed with Spark Streaming
+Graph processing is available through GraphX on Spark
+Cloud computing enables on demand resource provisioning
+Kubernetes is a portable extensible open source platform
+Spark on Kubernetes is the future of big data processing
+Data engineers use Spark for ETL and data pipelines
+Python is the most popular language for data science
+Spark supports batch processing and real time streaming

@@ -9,7 +9,7 @@ import time
 spark = SparkSession.builder.appName("SparkSQLAnalysis").getOrCreate()
 
 # Load and preprocess
-df = spark.read.csv("douban_movies.csv", header=True, inferSchema=True, encoding="UTF-8")
+df = spark.read.csv("s3a://cloud-course-data-b62c/douban_movies.csv", header=True, inferSchema=True, encoding="UTF-8")
 df = df.dropna(subset=["original_title", "directors"])
 df = df.fillna({"genres": "未知", "countries": "未知"})
 df = df.filter(col("year").isNotNull())

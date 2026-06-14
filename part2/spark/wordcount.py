@@ -2,8 +2,7 @@ from pyspark.sql import SparkSession
 
 spark = SparkSession.builder.appName("WordCount").getOrCreate()
 
-# Read sample text from OBS (path provided by teacher in course group)
-lines = spark.sparkContext.textFile("s3a://<BUCKET>/sample.txt")
+lines = spark.sparkContext.textFile("s3a://cloud-course-data-b62c/sample.txt")
 
 word_counts = (
     lines.flatMap(lambda line: line.split())
