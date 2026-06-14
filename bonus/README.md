@@ -2,8 +2,7 @@
 
 ## 附加题1：监控系统 (+5分)
 
-### 部署步骤（Person B 执行）
-```bash
+### 部署步骤```bash
 # 1. 加载监控镜像
 docker load -i monitoring-all.tar
 
@@ -35,8 +34,7 @@ kubectl port-forward -n monitoring svc/monitoring-grafana 8080:80
 
 GitHub Actions 工作流已配置在 `.github/workflows/deploy.yml`。
 
-### 配置步骤（Person B 执行）
-1. GitHub 仓库 Settings → Secrets → 添加:
+### 配置步骤1. GitHub 仓库 Settings → Secrets → 添加:
    - `SWR_ORG`: 你的 SWR 组织名
    - `SWR_USERNAME`: SWR 登录用户名
    - `SWR_PASSWORD`: SWR 登录密码（临时Token）
